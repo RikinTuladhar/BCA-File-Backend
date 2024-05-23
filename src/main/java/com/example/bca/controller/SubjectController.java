@@ -25,7 +25,7 @@ public class SubjectController {
     @Autowired
     public SemesterRepository semesterRepository;
 
-    //    /subject
+    //    /subject many to one mapping
     @GetMapping
     public ResponseEntity<?> getSubject() {
         ErrorMessage errorMessage = new ErrorMessage("No Subjects found");
@@ -55,7 +55,7 @@ public class SubjectController {
     }
 
 
-    //    /subject/semester_id
+    //    /subject/semester_id    many to one posting data
     @PostMapping("/{semester_id}")
     public ResponseEntity<?> postSubject(
             @RequestBody Subject subject,

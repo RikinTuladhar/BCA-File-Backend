@@ -30,7 +30,6 @@ public class FileController {
     @GetMapping
     public ResponseEntity<?> getFile() {
         List<FileModel> fileModels = fileRepo.findAll();
-
         if (fileModels != null && !fileModels.isEmpty()) {
             List<FileResponse> fileResponseList = new ArrayList<>();
             for (FileModel file : fileModels) {
@@ -42,8 +41,6 @@ public class FileController {
                 fileResponse.setSubjectName(subject.getName());
                 fileResponseList.add(fileResponse);
             }
-
-
             return ResponseEntity.ok(fileResponseList);
         }
         ErrorMessage errorMessage = new ErrorMessage("No files");
@@ -69,13 +66,13 @@ public class FileController {
     @PostMapping("/{subjectid}/{userid}")
     public ResponseEntity<FileModel> postFile(
             @RequestBody FileModel fileModel,
-            @PathVariable(name = "subjectid") Integer subjectid,
-            @PathVariable(name = "userid") Integer userid
+            @PathVariable(name = "subjectid") Integer subjectid, //one to many
+            @PathVariable(name = "userid") Integer userid //many to many
     ) {
         Subject subject = subjectRepo.findById(subjectid).orElseThrow(() -> new RuntimeException("Subject not found"));
         User user = userRepository.findById(userid).orElseThrow(() -> new RuntimeException("User not found"));
-        fileModel.setSubject(subject);
-        user.file(fileModel);
+        fileModel.setSubject(subject); //one to many
+        user.file(fileModel);  // many to many -> database bata fetch garera, deko body ko data insert garyo and again updated
         fileRepo.save(fileModel);
         userRepository.save(user);
 
