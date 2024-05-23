@@ -12,3 +12,6 @@
 
 <h3>Hibernate</h3>
 <p>Hibernate is an object-relational mapping (ORM) tool for Java. It provides a framework for mapping an object-oriented domain model to a relational database. Hibernate simplifies the development of Java applications to interact with databases by providing a high-level object-oriented API to handle database operations.</p>
+
+<h3>JPA</h3>
+<p>Java Persistence API (JPA) is a specification for accessing, persisting, and managing data between Java objects and a relational database. JPA is part of the Java EE (Enterprise Edition) platform but can also be used in Java SE (Standard Edition) applications. JPA provides a set of interfaces and guidelines that ORM tools like Hibernate can implement.</p>
