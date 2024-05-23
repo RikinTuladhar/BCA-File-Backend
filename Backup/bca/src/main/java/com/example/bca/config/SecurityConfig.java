@@ -1,11 +1,14 @@
 package com.example.bca.config;
 
+import com.example.bca.dto.CustomAccessDeniedHandler;
+import com.example.bca.dto.CustomAuthenticationEntryPoint;
 import com.example.bca.filter.JwtAuthenticationFilter;
 import com.example.bca.service.UserDetailsServiceImp;
 
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,10 +25,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private  final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler customAccessDeniedHandler, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.userDetailsServiceImp = userDetailsServiceImp;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -34,8 +41,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(res -> res
                         .requestMatchers("/login/**", "/register/**").permitAll()
-                        .requestMatchers("/file").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/file/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/subject/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .userDetailsService(userDetailsServiceImp)
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
