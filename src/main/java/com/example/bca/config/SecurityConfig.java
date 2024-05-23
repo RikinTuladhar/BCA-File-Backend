@@ -5,7 +5,6 @@ import com.example.bca.dto.CustomAuthenticationEntryPoint;
 import com.example.bca.filter.JwtAuthenticationFilter;
 import com.example.bca.service.UserDetailsServiceImp;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,10 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private  final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler customAccessDeniedHandler, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.userDetailsServiceImp = userDetailsServiceImp;
@@ -43,15 +43,16 @@ public class SecurityConfig {
                         .requestMatchers("/login/**", "/register/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/file/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/subject/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/semester/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .userDetailsService(userDetailsServiceImp)
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .userDetailsService(userDetailsServiceImp)
                 .build();
     }
 

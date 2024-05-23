@@ -15,24 +15,15 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subject {
+public class SemesterModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subject_id")
-    private Integer id;
+    private int id;
 
-    @Column(name = "subject_name")
     private String name;
 
-
     @JsonIgnore
-    @OneToMany(mappedBy = "subject")
-    private Set<FileModel> fileModel = new HashSet<>();
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "semester_id")
-    SemesterModel semesterModel;
-
+    @OneToMany(mappedBy = "semesterModel")
+    Set<Subject> subjects = new HashSet<>();
 
 }
