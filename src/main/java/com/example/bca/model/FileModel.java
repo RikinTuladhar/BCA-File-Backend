@@ -33,6 +33,7 @@ public class FileModel {
     @ManyToMany(mappedBy = "file")
     private Set<User> users = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "subjectid")
     private Subject subject;
