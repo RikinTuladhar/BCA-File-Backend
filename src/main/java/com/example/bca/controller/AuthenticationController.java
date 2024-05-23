@@ -41,8 +41,8 @@ public class AuthenticationController {
         return ResponseEntity.ok("Video he re");
     }
 
-    @GetMapping("/getUser")
-    ResponseEntity<?> getUser(@RequestBody TokenRequest token){
+    @GetMapping("/getUser/{token}")
+    ResponseEntity<?> getUser(@PathVariable("token") TokenRequest token){
         System.out.println(token);
         ErrorMessage errorMessage = new ErrorMessage("No token involved");
         if(token == null) return ResponseEntity.badRequest().body(errorMessage);
