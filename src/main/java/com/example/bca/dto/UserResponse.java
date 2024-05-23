@@ -5,14 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Component
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class SubjectResponse {
-    private int id;
-    private String name;
-    private Integer semesterId;
+@NoArgsConstructor
+
+public class UserResponse {
+    Integer id;
+    String firstName;
+    String lastname;
+    String username;
+
 }

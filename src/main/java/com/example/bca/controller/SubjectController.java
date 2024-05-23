@@ -36,7 +36,7 @@ public class SubjectController {
             subjectResponse.setId(subject.getId());
             subjectResponse.setName(subject.getName());
             SemesterModel semesterModel = subject.getSemesterModel();
-            subjectResponse.setSemesterName(semesterModel.getName());
+            subjectResponse.setSemesterId(semesterModel.getId());
             subjectResponsesList.add(subjectResponse);
         }
         if (subjectList != null && !subjectList.isEmpty()) {

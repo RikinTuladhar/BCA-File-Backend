@@ -9,10 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class SubjectResponse {
-    private int id;
-    private String name;
-    private Integer semesterId;
+@NoArgsConstructor
+public class TokenRequest {
+    public String token;
 }
