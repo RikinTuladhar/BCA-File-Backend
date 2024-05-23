@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,10 +50,22 @@ public class FileController {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
-    //    @PostMapping
-//    public ResponseEntity<FileModel> postFile(@RequestBody FileModel fileModel){
-//        return ResponseEntity.ok(fileRepo.save(fileModel));
-//    }
+
+    //    /file -> file/subjectid/1
+    @GetMapping("subjectid/{subjectid}")
+    public ResponseEntity<?> getFileBySubjectId(@PathVariable("subjectid") Integer subjectid) {
+        List<FileModel> fileModels = fileRepo.findBySubjectId(subjectid);
+        if (!fileModels.isEmpty()) {
+            ResponseEntity.ok(subjectid);
+            return ResponseEntity.ok(fileModels);
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("No files found");
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+
+    }
+
+
     @PostMapping("/{subjectid}/{userid}")
     public ResponseEntity<FileModel> postFile(
             @RequestBody FileModel fileModel,
