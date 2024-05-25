@@ -38,5 +38,10 @@ public class FileModel {
     @JoinColumn(name = "subjectid")
     private Subject subject;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "fileBooks")
+    Set<User> userBooks = new HashSet<>();
+
+
 
 }

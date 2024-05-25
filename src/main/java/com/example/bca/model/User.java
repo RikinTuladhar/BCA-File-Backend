@@ -86,4 +86,16 @@ public class User implements UserDetails {
     public void file(FileModel fileModel){
         file.add(fileModel);
     }
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "bookmarks",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "file_id")
+    )
+    Set<FileModel> fileBooks = new HashSet<>();
+    public void  fileBooks(FileModel fileModel){
+        fileBooks.add(fileModel);
+    }
 }
