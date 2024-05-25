@@ -18,5 +18,6 @@ public class UserResponse {
     String firstName;
     String lastname;
     String username;
+    String role;
 
 }

@@ -54,12 +54,8 @@ public class AuthenticationController {
             userResponse.setFirstName(userdetail.getFirstName());
             userResponse.setLastname(userdetail.getLastname());
             userResponse.setUsername(userdetail.getUsername());
+            userResponse.setRole(String.valueOf(userdetail.getRole()));
             return ResponseEntity.ok(userResponse);
-
-
         }
-
-
     }
-
 }
