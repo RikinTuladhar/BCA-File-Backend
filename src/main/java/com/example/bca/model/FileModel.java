@@ -29,6 +29,7 @@ public class FileModel {
     @Column(name = "filePath")
     private String filePath;
 
+    //uploader user
     @JsonIgnore
     @ManyToMany(mappedBy = "file")
     private Set<User> users = new HashSet<>();
@@ -38,6 +39,7 @@ public class FileModel {
     @JoinColumn(name = "subjectid")
     private Subject subject;
 
+    //bookmark user
     @JsonIgnore
     @ManyToMany(mappedBy = "fileBooks")
     Set<User> userBooks = new HashSet<>();

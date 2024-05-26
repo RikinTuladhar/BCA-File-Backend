@@ -52,14 +52,22 @@ public class FileController {
     @GetMapping("subjectid/{subjectid}")
     public ResponseEntity<?> getFileBySubjectId(@PathVariable("subjectid") Integer subjectid) {
         List<FileModel> fileModels = fileRepo.findBySubjectId(subjectid);
+        List<FileResponse> fileResponseList = new ArrayList<>();
         if (!fileModels.isEmpty()) {
-            ResponseEntity.ok(subjectid);
-            return ResponseEntity.ok(fileModels);
+            for (FileModel file:fileModels){
+                FileResponse fileResponse  = new FileResponse();
+                fileResponse.setId(file.getId());
+                fileResponse.setName(file.getName());
+                fileResponse.setFilePath(file.getFilePath());
+                 Subject subject =  file.getSubject();
+                 fileResponse.setSubjectName(subject.getName());
+                fileResponseList.add(fileResponse);
+            }
+            return ResponseEntity.ok(fileResponseList);
         } else {
             ErrorMessage errorMessage = new ErrorMessage("No files found");
             return ResponseEntity.badRequest().body(errorMessage);
         }
-
     }
 
 

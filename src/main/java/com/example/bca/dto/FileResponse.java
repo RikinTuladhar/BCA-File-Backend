@@ -17,6 +17,7 @@ public class FileResponse {
     private String name;
     private String filePath;
     private String subjectName;
+//    private String uploaderName;
 
 
 }
