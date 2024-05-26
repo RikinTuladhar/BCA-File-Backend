@@ -1,8 +1,10 @@
 package com.example.bca.controller;
 
 import com.example.bca.dto.ErrorMessage;
+import com.example.bca.dto.FileResponse;
 import com.example.bca.dto.Message;
 import com.example.bca.model.FileModel;
+import com.example.bca.model.Subject;
 import com.example.bca.model.User;
 import com.example.bca.repository.FileRepo;
 import com.example.bca.repository.UserRepository;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,9 +32,22 @@ public class BookMarkController {
     @GetMapping("/{u_id}")
     ResponseEntity<?> getBookMarksByUserId(@PathVariable("u_id")Integer u_id){
         List<FileModel> fileModelList =  fileRepo.findBookMarksByUserId(u_id);
-        System.out.println(fileModelList);
-        return ResponseEntity.ok(fileModelList);
-
+        if(fileModelList != null){
+            List<FileResponse> fileResponseList = new ArrayList<>();
+            for (FileModel fileModel:fileModelList ){
+                FileResponse fileResponse = new FileResponse();
+                fileResponse.setId(fileModel.getId());
+                fileResponse.setName(fileModel.getName());
+                fileResponse.setFilePath(fileModel.getFilePath());
+                Subject subject =  fileModel.getSubject();
+                fileResponse.setSubjectName(subject.getName());
+                fileResponseList.add(fileResponse);
+            }
+            System.out.println(fileModelList);
+            return ResponseEntity.ok(fileResponseList);
+        }else {
+            return ResponseEntity.badRequest().body("Not Found Book Mark");
+        }
     }
 //    /bookmarks/1
     @PostMapping("/{f_id}/{u_id}")
