@@ -2,6 +2,7 @@ package com.example.bca.controller;
 
 import com.example.bca.dto.ErrorMessage;
 import com.example.bca.dto.FileResponse;
+import com.example.bca.dto.Message;
 import com.example.bca.model.FileModel;
 import com.example.bca.model.Subject;
 import com.example.bca.model.User;
@@ -54,13 +55,13 @@ public class FileController {
         List<FileModel> fileModels = fileRepo.findBySubjectId(subjectid);
         List<FileResponse> fileResponseList = new ArrayList<>();
         if (!fileModels.isEmpty()) {
-            for (FileModel file:fileModels){
-                FileResponse fileResponse  = new FileResponse();
+            for (FileModel file : fileModels) {
+                FileResponse fileResponse = new FileResponse();
                 fileResponse.setId(file.getId());
                 fileResponse.setName(file.getName());
                 fileResponse.setFilePath(file.getFilePath());
-                 Subject subject =  file.getSubject();
-                 fileResponse.setSubjectName(subject.getName());
+                Subject subject = file.getSubject();
+                fileResponse.setSubjectName(subject.getName());
                 fileResponseList.add(fileResponse);
             }
             return ResponseEntity.ok(fileResponseList);
@@ -85,6 +86,22 @@ public class FileController {
         userRepository.save(user);
 
         return ResponseEntity.ok(fileModel);
+    }
+
+    //    id of file to delte
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteFileById(@PathVariable("id") Integer id) {
+        if (id instanceof Integer) {
+            fileRepo.deletedJoinTableUserFile(id);
+            fileRepo.deleteJoinTableBookMark(id);
+            fileRepo.deleteById(id);
+            Message message = new Message("Deleted");
+            return ResponseEntity.ok(message);
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("Something went wrong");
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+
     }
 
 }

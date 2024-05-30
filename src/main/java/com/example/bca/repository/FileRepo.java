@@ -30,4 +30,15 @@ public interface FileRepo extends JpaRepository<FileModel,Integer> {
             @Param("f_id") Integer f_id
     );
 
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_file u where u.file_id = :id",nativeQuery = true)
+    int deletedJoinTableUserFile(@Param("id")Integer id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from bookmarks b where b.file_id = :id",nativeQuery = true)
+    int deleteJoinTableBookMark(@Param("id") Integer id);
+
+
 }
