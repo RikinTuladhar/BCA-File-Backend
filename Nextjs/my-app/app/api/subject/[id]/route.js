@@ -1,11 +1,11 @@
 import { connectToDatabase } from "@/lib/db";
 import { NextResponse } from "next/server";
-
+import { addCorsHeaders } from "@/lib/middleware"; // Import the middleware function
 export async function GET(req, { params }) {
   const { id } = params;
 
   if (!id) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         error: "ID is required",
       },
@@ -13,6 +13,7 @@ export async function GET(req, { params }) {
         status: 400,
       }
     );
+    return addCorsHeaders(response);
   }
 
   const connection = await connectToDatabase();
@@ -21,13 +22,15 @@ export async function GET(req, { params }) {
     const sql = `SELECT s.subject_id as id, s.subject_name as name   FROM subject s  where s.semester_id = ?`;
     const [subjects] = await db.query(sql, [id]);
     if (subjects.length > 0) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         subjects,
 
         { status: 200 }
       );
+      return addCorsHeaders(response);
     } else {
-      return NextResponse.json([], { status: 200 });
+      const response = NextResponse.json([], { status: 200 });
+      return addCorsHeaders(response);
     }
   } catch (error) {
     console.log("Database error" + error);

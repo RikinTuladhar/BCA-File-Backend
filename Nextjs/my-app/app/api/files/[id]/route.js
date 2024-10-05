@@ -2,12 +2,13 @@
 
 import { connectToDatabase } from "@/lib/db";
 import { NextResponse } from "next/server";
-
+import { addCorsHeaders } from "@/lib/middleware";
 export async function GET(req, { params }) {
   const { id } = params;
 
+
   if (!id) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         error: "ID is required",
       },
@@ -15,6 +16,7 @@ export async function GET(req, { params }) {
         status: 400,
       }
     );
+    return addCorsHeaders(response);
   }
 
   const connection = await connectToDatabase();
@@ -23,13 +25,13 @@ export async function GET(req, { params }) {
     const sql = `SELECT f.file_id as id, f.file_name as name,f.file_path as filePath,s.subject_name as subjectName FROM file_model f inner join subject s on f.subjectid = s.subject_id  where f.subjectid = ?`;
     const [subjects] = await db.query(sql, [id]);
     if (subjects.length > 0) {
-      return NextResponse.json(
-        subjects,
-
-        { status: 200 }
-      );
+      const response = NextResponse.json(subjects.length > 0 ? subjects : [], {
+        status: 200,
+      });
+      return addCorsHeaders(response); // Add CORS headers to the response
     } else {
-      return NextResponse.json([], { status: 200 });
+      const response = NextResponse.json([], { status: 200 });
+      return addCorsHeaders(response);
     }
   } catch (error) {
     console.log("Database error" + error);
