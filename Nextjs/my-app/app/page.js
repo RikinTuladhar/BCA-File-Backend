@@ -9,7 +9,7 @@ const Page = () => {
 
   const [isLoged, setIsLoged] = useState(false);
 
-  const userValue = JSON.parse(localStorage.getItem("user"));
+  const userValue = JSON.parse(window.localStorage.getItem("user"));
 
   const [reload, setReload] = useState(false);
   useEffect(() => {
@@ -80,7 +80,7 @@ const Page = () => {
       .then((res) => {
         console.log(res.data);
 
-        localStorage.setItem("user", JSON.stringify(res?.data));
+        window.localStorage.setItem("user", JSON.stringify(res?.data));
         setReload(!reload);
       })
       .catch((err) => console.log(err));
@@ -120,7 +120,7 @@ const Page = () => {
         <button
           className="border my-2 px-3 py-2 rounded-3xl"
           onClick={(e) => {
-            localStorage.removeItem("user");
+            window.localStorage.removeItem("user");
 
             setIsLoged(false);
           }}
