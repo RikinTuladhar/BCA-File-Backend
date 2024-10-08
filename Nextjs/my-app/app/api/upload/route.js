@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/lib/db";
 
 export async function POST(req) {
   const { data } = await req.json(); // assuming your data is sent as { data: [...] }
-
+  console.log(data)
   if (!data || !Array.isArray(data)) {
     return new Response(JSON.stringify({ message: "Invalid data" }), {
       status: 400,
@@ -64,7 +64,5 @@ export async function POST(req) {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
-  } finally {
-    await connection.end();
   }
 }
