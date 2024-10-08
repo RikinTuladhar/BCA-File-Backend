@@ -3,6 +3,7 @@
 import { connectToDatabase } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { addCorsHeaders } from "@/lib/middleware";
+
 export async function GET(req, { params }) {
   const { id } = params;
 
@@ -37,3 +38,5 @@ export async function GET(req, { params }) {
     console.log("Database error" + error);
   }
 }
+
+
