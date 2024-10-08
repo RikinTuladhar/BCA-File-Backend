@@ -6,17 +6,18 @@ const Page = () => {
   const [csvData, setCsvData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [isLoged, setIsLoged] = useState(false);
-
-  const userValue = JSON.parse(window.localStorage.getItem("user"));
-
   const [reload, setReload] = useState(false);
+
+  // Ensure this runs on the client side only
   useEffect(() => {
-    if (userValue && userValue?.role == "ADMIN") {
-      setIsLoged(true);
+    if (typeof window !== "undefined") {
+      const userValue = JSON.parse(window.localStorage.getItem("user"));
+      if (userValue && userValue?.role === "ADMIN") {
+        setIsLoged(true);
+      }
     }
-  }, [userValue]);
+  }, [reload]);
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -35,7 +36,6 @@ const Page = () => {
     reader.onload = async (e) => {
       const text = e.target.result;
       const rows = text.split("\n").map((row) => row.split(","));
-
       setCsvData(rows);
       setErrorMessage("");
       setIsLoading(false);
@@ -79,9 +79,10 @@ const Page = () => {
       .post("/api/user", user)
       .then((res) => {
         console.log(res.data);
-
-        window.localStorage.setItem("user", JSON.stringify(res?.data));
-        setReload(!reload);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("user", JSON.stringify(res?.data));
+          setReload(!reload);
+        }
       })
       .catch((err) => console.log(err));
   }
@@ -120,9 +121,10 @@ const Page = () => {
         <button
           className="border my-2 px-3 py-2 rounded-3xl"
           onClick={(e) => {
-            window.localStorage.removeItem("user");
-
-            setIsLoged(false);
+            if (typeof window !== "undefined") {
+              window.localStorage.removeItem("user");
+              setIsLoged(false);
+            }
           }}
         >
           Log out
@@ -150,9 +152,7 @@ const Page = () => {
           </div>
         )}
         {isLoading ? (
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            Loading...
-          </div>
+          <div style={{ textAlign: "center", marginTop: "20px" }}>Loading...</div>
         ) : (
           csvData.length > 0 && (
             <table
