@@ -1,24 +1,15 @@
 "use client";
 import Navbar from "@/components/navbar/Navbar";
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 
 const Page = () => {
   const [csvData, setCsvData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoged, setIsLoged] = useState(false);
-  const [reload, setReload] = useState(false);
+
 
   // Ensure this runs on the client side only
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const userValue = JSON.parse(window.localStorage.getItem("user"));
-      if (userValue && userValue?.role === "ADMIN") {
-        setIsLoged(true);
-      }
-    }
-  }, [reload]);
+
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -63,30 +54,6 @@ const Page = () => {
 
     reader.readAsText(file);
   };
-
-  const [user, setUser] = useState({
-    username: "",
-    password: "",
-  });
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    axios
-      .post("/api/user", user)
-      .then((res) => {
-        console.log(res.data);
-        if (typeof window !== "undefined") {
-          window.localStorage.setItem("user", JSON.stringify(res?.data));
-          setReload(!reload);
-        }
-      })
-      .catch((err) => console.log(err));
-  }
 
   return (
     <div className="w-full min-h-[100vh]">
