@@ -1,4 +1,5 @@
 "use client";
+import Navbar from "@/components/navbar/Navbar";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
@@ -87,50 +88,11 @@ const Page = () => {
       .catch((err) => console.log(err));
   }
 
-  if (!isLoged) {
-    return (
-      <div className="w-full h-screen flex-col flex justify-center items-center">
-        <h1 className="text-3xl my-10">Log in</h1>
-        <form
-          className=" flex gap-5 border py-10 px-10 rounded-2xl flex-col justify-center items-center"
-          onSubmit={handleSubmit}
-        >
-          <input
-            className="text-black px-2 py-1 rounded-xl "
-            type="text"
-            placeholder="enter your username"
-            name="username"
-            onChange={handleChange}
-          />
-          <input
-            className="text-black px-2 py-1 rounded-xl "
-            type="text"
-            placeholder="enter your password"
-            name="password"
-            onChange={handleChange}
-          />
-          <button className="border px-3 py-2 rounded-3xl" type="submit">
-            Log in
-          </button>
-        </form>
-      </div>
-    );
-  } else {
-    return (
+  return (
+    <div className="w-full min-h-[100vh]">
+      <Navbar />
       <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-        <button
-          className="border my-2 px-3 py-2 rounded-3xl"
-          onClick={(e) => {
-            if (typeof window !== "undefined") {
-              window.localStorage.removeItem("user");
-              setIsLoged(false);
-            }
-          }}
-        >
-          Log out
-        </button>
         <h1 style={{ marginBottom: "20px" }}>Loading Data from File</h1>
-
         <div>
           <h1>Data format in csv file:</h1>
           <ul className="flex justify-between my-2">
@@ -152,7 +114,9 @@ const Page = () => {
           </div>
         )}
         {isLoading ? (
-          <div style={{ textAlign: "center", marginTop: "20px" }}>Loading...</div>
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            Loading...
+          </div>
         ) : (
           csvData.length > 0 && (
             <table
@@ -180,8 +144,8 @@ const Page = () => {
           )
         )}
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default Page;

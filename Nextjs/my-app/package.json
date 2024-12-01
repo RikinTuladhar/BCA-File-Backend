@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "flyonui": "^1.1.0",
+    "jose": "^5.9.3",
     "my-app": "file:",
     "mysql2": "^3.11.3",
     "next": "14.2.14",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "eslint": "^8",
