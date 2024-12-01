@@ -7,10 +7,6 @@ const Page = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-
-  // Ensure this runs on the client side only
-
-
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) {
@@ -32,7 +28,6 @@ const Page = () => {
       setErrorMessage("");
       setIsLoading(false);
 
-      // Send data to the API
       try {
         const response = await fetch("/api/upload", {
           method: "POST",
@@ -54,6 +49,13 @@ const Page = () => {
 
     reader.readAsText(file);
   };
+
+  useEffect(() => {
+    // This ensures all the setup happens only in the browser.
+    if (typeof window !== "undefined") {
+      console.log("Client-side rendering.");
+    }
+  }, []);
 
   return (
     <div className="w-full min-h-[100vh]">
