@@ -1,8 +1,10 @@
+'use client'
 import { logout } from "@/app/lib/session";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const Navbar = () => {
+  const [open,setOpen] = useState(false);
   return (
     <nav className="p-4 bg-blue-600">
       <div className="container flex items-center justify-between mx-auto">
