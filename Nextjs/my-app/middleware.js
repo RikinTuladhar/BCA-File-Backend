@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/app/lib/session";
 
-const protectedRoutes = ["/","/add","/show"]; //if validate can go inside this route
+const protectedRoutes = ["/","/add","/show","/edit","/show-subject-content"]; //if validate can go inside this route
 const publicRoutes = ["/login"];        //if not valid then go here
 
 export default async function middleware(req) {

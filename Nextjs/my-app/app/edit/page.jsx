@@ -61,10 +61,14 @@ const Page = () => {
     setSelectedSubject("");
     setFilteredData(tableData);
   };
-
   return (
     <div className="w-full min-h-[100vh]">
       <Navbar />
+      <div className="flex justify-end w-full p-4 border-b border-gray-200">
+        <Link href={"/add"} className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+          Add Subject File
+        </Link>
+      </div>
       <div className="container p-4 bg-[#0F0F0F] border mx-auto mt-5">
         <div className="flex justify-between mb-4">
           <div className="flex items-center">
@@ -113,6 +117,7 @@ const Page = () => {
                 <th className="px-6 py-3">Subject</th>
 
                 <th className="px-6 py-3">View</th>
+                <th className="px-6 py-3">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -120,7 +125,7 @@ const Page = () => {
                 <tr key={data.id} className="bg-black border-b">
                   {/* <td className="px-4 py-3">{data.id}</td> */}
                   <td className="px-4 py-3">{data.semesterId}</td>
-                  <td className="px-4 py-3">{data.name}</td>
+                  <td className="px-4 py-3 font-bold">{data.name}</td>
 
                   <td className="px-4 py-3">
                     <Link
@@ -129,6 +134,14 @@ const Page = () => {
                     >
                       View
                     </Link>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      href={`/show-subjects-content/${data.subjectId}/${data.name}`}
+                      className="px-4 py-2 font-bold text-white bg-green-500 rounded hover:bg-blue-700"
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))}

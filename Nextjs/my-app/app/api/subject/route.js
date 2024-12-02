@@ -6,7 +6,7 @@ export async function GET(req) {
 
   try {
     const db = await connectToDatabase();
-    const sql = `SELECT s.subject_id as id, s.subject_name as name, s.semester_id as semesterId  FROM subject s`;
+    const sql = `SELECT s.subject_id as id, s.subject_name as name, s.semester_id as semesterId,s.subject_id as subjectId  FROM subject s`;
     const [subjects] = await db.query(sql);
     if (subjects.length > 0) {
       const response = NextResponse.json(subjects, { status: 200 });

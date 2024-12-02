@@ -22,7 +22,7 @@ const Navbar = () => {
             Show
           </Link>
           <Link href="/edit" className="text-white hover:text-gray-200">
-            Services
+            Edit Files
           </Link>
           <button onClick={()=>logout()} className="text-white hover:text-gray-200">
             Log Out
