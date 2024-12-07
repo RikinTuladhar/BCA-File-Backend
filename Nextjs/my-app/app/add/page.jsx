@@ -4,199 +4,185 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "@/components/navbar/Navbar";
+
+import Cookies from "js-cookie";
 const AddFile = () => {
-  const fileInputRef = useRef(null);
-  const buttonRef = useRef();
+  const semesters = Array.from({ length: 8 }, (_, i) => ({
+    value: `${i + 1}`,
+    label: `Semester ${i + 1}`,
+  }));
 
-  const [reload, setReload] = useState(false);
-  // const { id } = userDetails;
-  const [imageUpload, setImageUpload] = useState(null);
-  const [buttonClick, setButtonClick] = useState(false);
-  const [data, setData] = useState({
-    name: "",
-    filePath: "",
-  });
-  // console.log(userDetails);
+  const [selectedSemester, setSelectedSemester] = useState(semesters[0].value);
+  const [selectedSubject, setSelectedSubject] = useState([]);
+  const [name, setName] = useState("");
+  const [semesterId, setsemesterId] = useState(1);
+  const [subjectId, setSubjectId] = useState(1);
+  const [url, setUrl] = useState("");
+  const [token, setToken] = useState("");
 
- 
-  const [subjectId, setSubjectId] = useState("");
-  const [subjects, setSubjects] = useState([]);
-  const [subjectsFromApi, setSubjectsFromApi] = useState([]);
-  const [selectedSem, setSelectedSem] = useState(1);
-  useEffect(() => {
-    // getSubjectAll()
-    //   .then((res) => {
-    //     setSubjectsFromApi(res);
-    //     console.log(res);
-    //     // console.log(res)
-    //   })
-    //   .catch((err) => console.log(err));
-  }, [reload]);
-
-  useEffect(() => {
-    console.log(selectedSem);
-    const filtered = subjectsFromApi?.filter(
-      (item) => item.semesterId === parseInt(selectedSem)
-    );
-    console.log(filtered);
-    setSubjects(filtered?.length > 0 ? filtered : []);
-  }, [selectedSem, subjectsFromApi, reload]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({ ...data, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setButtonClick(true);
+    alert("Clicked");
+    const header = {
+      headers: {
+        Authorization: `Bearer ${token} `,
+      },
+    };
 
-    const file = fileInputRef.current.files[0];
-    const { name } = data;
-    if (name && subjectId && selectedSem) {
-      toast("Uploading...");
-      if (imageUpload === null) {
-        toast.info("Upload File Please ");
-        setButtonClick(false);
-        return;
-      }
-      // console.log(imageUpload)
-      // console.log(file.type);
-      // xml != pdf -> true
-      // xml != docx -> true
-      // xml != pptx -> true
-      // console.log(file);
-      // console.log(file.type);
-      const typeArray = ["pdf", "docx", "pptx"];
-      const fileName = file.name;
-      const fileType = fileName.split(".");
-      const extension = fileType[fileType.length - 1];
-
-      // console.log(fileName);
-      // console.log(typeArray);
-      // console.log(fileType);
-      // console.log(extension);
-      if (typeArray.includes(extension)) {
-        //  return;
-        const imageRef = ref(storage, `BCAFiles/${v4() + imageUpload.name}`);
-        uploadBytes(imageRef, imageUpload).then((snapshot) => {
-          getDownloadURL(snapshot.ref)
-            .then((url) => {
-              // console.log(url);
-              return axios.post(
-                `https://bca-file-backend.onrender.com/file/${subjectId}/${userDetails?.id}`,
-                { ...data, filePath: url },
-                config
-              );
-              // Do something with the URL (e.g., save it to the state)
-            })
-            .then((res) => {
-              setButtonClick(false);
-              toast.success("Uploaded successfully");
-              setReload(true);
-              setImageUpload(null);
-              setData({
-                name: "",
-                filePath: "",
-              });
-              setSelectedSem(1);
-              setSubjectId("");
-              setSubjects([]);
-              setSubjectsFromApi([]);
-              setReload(false);
-              setButtonClick(false);
-            });
-        });
-      } else {
-        toast.error("Please upload a valid file. pdf or pptx or docx");
-      }
-    } else {
-      toast.error("Please fill all fields");
-      setButtonClick(false);
+    if (!token || !url || !subjectId || !name) {
+      toast.error("Fill all the necessary things");
+      return;
     }
+
+    const data = {
+      file_name: name,
+      file_path: url,
+    };
+
+    try {
+      const res = await axios.post(
+        `/api/files?subjectid=${subjectId}`,
+        data,
+        header
+      );
+      const res_data = await res.data.message;
+      toast.success(res_data);
+      setName("");
+      setUrl("");
+      setSubjectId(1);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+
+    console.log({
+      semester: selectedSemester,
+      subject: selectedSubject,
+      name,
+      url,
+    });
   };
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get(`/api/subject/${semesterId}`);
+      const data = await res.data;
+      setSelectedSubject(data);
+      setSubjectId(data[0]?.id);
+    })();
+    setToken(Cookies.get("session"));
+  }, [semesterId]);
 
   return (
-    <div className={"flex-col"}>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
+    <>
+      <Navbar />
+      <div className="w-full px-5 space-y-3 md:px-0 py-10 min-h-[100vh] grid place-items-center">
+        <h1 className="text-2xl font-bold">Add File</h1>
+        <ToastContainer
+          position="top-center"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+        <div className="flex gap-x-2">
+          <span className="font-bold">Selected semester id:</span>
+          <span> {selectedSemester}</span>
+        </div>
+        <div className="flex gap-x-2">
+          <span className="font-bold">Selected subject id:</span>{" "}
+          <span>{subjectId}</span>
+        </div>
 
-      <h1 className="text-2xl font-bold">File Upload</h1>
-      <hr />
-      <form className="w-full mb-3 md:w-[auto]" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4">
-          <input
-            label={"File Name"}
-            value={data.name}
-            onChange={handleChange}
-            name="name"
-          />
-          <select
-            label={"Semester"}
-            name={"semester"}
-            onChange={(e) => setSelectedSem(e.target.value)}
-            options={[
-              { id: 1, name: "Semester 1" },
-              { id: 2, name: "Semester 2" },
-              { id: 3, name: "Semester 3" },
-              { id: 4, name: "Semester 4" },
-              { id: 5, name: "Semester 5" },
-              { id: 6, name: "Semester 6" },
-              { id: 7, name: "Semester 7" },
-              { id: 8, name: "Semester 8" },
-            ]}
-          />
-          <label
-            className="inline-block text-lg font-semibold md:text-xl"
-            htmlFor={"subject"}
-          >
-            Subject
-          </label>
-          <select
-            onChange={(e) => setSubjectId(e.target.value)}
-            name="subject"
-            className="px-2 py-2 font-semibold rounded-lg"
-            disabled={!selectedSem}
-          >
-            <option value="" selected disabled>
-              Select Semester First
-            </option>
-            {subjects?.map((subject) => (
-              <option key={subject?.id} value={subject?.id}>
-                {subject.name}
-              </option>
-            ))}
-          </select>
+        <div className="w-full px-5  md:px-10 py-10 md:w-[50%] p-4 bg-white rounded-lg shadow-md">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label
+                className="block mb-2 text-sm font-bold text-gray-700"
+                htmlFor="semester"
+              >
+                Semester
+              </label>
+              <select
+                id="semester"
+                value={selectedSemester}
+                onChange={(e) => {
+                  setSelectedSemester(e.target.value);
+                  setsemesterId(e.target.value);
+                }}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              >
+                {semesters.map((semester) => (
+                  <option key={semester.value} value={semester.value}>
+                    {semester.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label
+                className="block mb-2 text-sm font-bold text-gray-700"
+                htmlFor="subject"
+              >
+                Subject
+              </label>
+              <select
+                id="subject"
+                onChange={(e) => setSubjectId(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              >
+                {selectedSubject?.map((subject) => (
+                  <option key={subject.name} value={subject.id}>
+                    {subject.name} 
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label
+                className="block mb-2 text-sm font-bold text-gray-700"
+                htmlFor="name"
+              >
+                Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block mb-2 text-sm font-bold text-gray-700"
+                htmlFor="url"
+              >
+                URL
+              </label>
+              <input
+                id="url"
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              />
+            </div>
+            <button
+              type="submit"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+          </form>
         </div>
-        <br />
-        <div className="w-[auto] md:w-full my-4">
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={(e) => setImageUpload(e.target.files[0])}
-            accept=".pdf,.pptx,.docx"
-          />
-        </div>
-        <div className="grid items-center w-full mb-2place-items-center">
-          <button
-            disabled={buttonClick ? true : false}
-            type="submit"
-            text="Submit"
-            className="self-center justify-self-center"
-          />
-        </div>
-      </form>
-    </div>
+      </div>
+    </>
   );
 };
 
