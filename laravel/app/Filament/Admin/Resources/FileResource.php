@@ -44,7 +44,7 @@ class FileResource extends Resource
 
                 Forms\Components\Select::make('semester_id')
                     ->label('Semester')
-                    // ->options(Semester::all()->pluck('name', 'id'))
+                    ->options(Semester::all()->pluck('name', 'id'))
                     ->reactive() // make it dynamic
                     ->afterStateUpdated(fn(callable $set) => $set('subject_id', null))
                     ->dehydrated(false),
@@ -77,7 +77,7 @@ class FileResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('slug'),
                 Tables\Columns\TextColumn::make('subject.name'),
-                // Tables\Columns\TextColumn::make('url'),
+                Tables\Columns\TextColumn::make('url'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d-m-Y'),
                 Tables\Columns\TextColumn::make('updated_at')
