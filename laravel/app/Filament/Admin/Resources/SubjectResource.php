@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SubjectResource extends Resource
@@ -47,23 +48,32 @@ class SubjectResource extends Resource
         return $table
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('semester.name'),
+                Tables\Columns\TextColumn::make('semester.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d-m-Y'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('d-m-Y'),
                 Tables\Columns\TextColumn::make('file_count')
-                    ->counts('files'),
-
-
+                    ->counts('files')
+                    ->state(function (Model $record): int {
+                        return $record->files()->count();
+                    })
+                    ->label('File Count')
             ])
             ->filters([
                 //
+                Tables\Filters\SelectFilter::make('semester_id')
+                    ->label('Semester')
+                    ->relationship('semester', 'name'),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -60,8 +60,16 @@ class FileResource extends Resource
             ])
             ->filters([
                 //
+                Tables\Filters\SelectFilter::make('semester_id')
+                    ->label('Semester')
+                    ->relationship('subject.semester', 'name'),
+
+                Tables\Filters\SelectFilter::make('subject_id')
+                    ->label('Subject')
+                    ->relationship('subject', 'name'),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

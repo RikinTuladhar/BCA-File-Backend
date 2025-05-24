@@ -43,7 +43,8 @@ class SemesterResource extends Resource
         return $table
             ->columns([
                 //
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('slug'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d-m-Y'),
@@ -55,6 +56,7 @@ class SemesterResource extends Resource
             ])
             ->filters([
                 //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
