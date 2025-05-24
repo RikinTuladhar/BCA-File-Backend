@@ -52,7 +52,8 @@ RUN chown -R www-data:www-data /var/www/html \
 # Install PHP and Node dependencies and build frontend assets
 RUN composer install --no-dev --optimize-autoloader --no-interaction && \
     npm install && \
-    npm run build
+    npm run build && \
+    php artisan filament:assets
 
 # Expose Apache port
 EXPOSE 80
