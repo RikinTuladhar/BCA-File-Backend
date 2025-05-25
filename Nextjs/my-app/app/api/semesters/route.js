@@ -6,10 +6,10 @@ export async function GET(req) {
 
   try {
     const db = await connectToDatabase();
-    const sql = `SELECT s.id as id, s.name as name, s.semester_id as semester_id,s.slug as slug  FROM subjects s`;
-    const [subjects] = await db.query(sql);
-    if (subjects.length > 0) {
-      const response = NextResponse.json(subjects, { status: 200 });
+    const sql = `SELECT s.id as id, s.name as name, s.slug as slug  FROM semesters s`;
+    const [semesters] = await db.query(sql);
+    if (semesters.length > 0) {
+      const response = NextResponse.json(semesters, { status: 200 });
       return addCorsHeaders(response);
     } else {
       const response = NextResponse.json([], { status: 200 });
