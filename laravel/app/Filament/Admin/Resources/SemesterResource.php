@@ -23,6 +23,9 @@ class SemesterResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = "College Management";
+
+
     public static function form(Form $form): Form
     {
         return $form

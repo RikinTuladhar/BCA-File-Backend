@@ -22,6 +22,8 @@ class SubjectResource extends Resource
 
     protected static ?int $navigationSort = 2; //make sure to put at other as well
 
+    protected static ?string $navigationGroup = "College Management";
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

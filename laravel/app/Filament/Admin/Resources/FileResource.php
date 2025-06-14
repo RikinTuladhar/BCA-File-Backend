@@ -25,6 +25,8 @@ class FileResource extends Resource
     protected static ?int $navigationSort = 3; //make sure to put at other as well
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = "College Management";
+
 
     public static function form(Form $form): Form
     {
