@@ -10,7 +10,7 @@ export async function connectToDatabase() {
         port: 3306, // default MySQL port
         user: process.env.USERNAME,
         password: process.env.PASSWORD,
-        database: process.env.DATABASE,
+        database: process.env.DATABASE, 
       });
       console.log("✅ Connected to MySQL");
     } catch (err) {
