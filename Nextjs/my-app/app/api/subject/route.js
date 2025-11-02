@@ -2,7 +2,6 @@ import { connectToDatabase } from "@/lib/db";
 import { addCorsHeaders } from "@/lib/middleware"; // Import the middleware function
 import { NextResponse } from "next/server";
 export async function GET(req) {
-  const connection = await connectToDatabase();
 
   try {
     const db = await connectToDatabase();

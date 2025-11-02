@@ -20,7 +20,6 @@ export async function GET(req, { params }) {
     return addCorsHeaders(response);
   }
 
-  const connection = await connectToDatabase();
   try {
     const db = await connectToDatabase();
     const sql = `SELECT f.file_id as id, f.file_name as name,f.file_path as filePath,s.subject_name as subjectName FROM file_model f inner join subject s on f.subjectid = s.subject_id  where f.subjectid = ?`;
